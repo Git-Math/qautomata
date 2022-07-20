@@ -13,9 +13,11 @@ jobs:
         with:
           toolchain: stable
       - uses: actions-rs/cargo@v1
+        name: "check format"
         with:
           command: fmt
           args: --check
       - uses: actions-rs/cargo@v1
+        name: "check lint with clippy"
         with:
           command: clippy
