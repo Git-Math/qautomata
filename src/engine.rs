@@ -1,7 +1,7 @@
 use crate::universe::types::*;
 
 pub fn run() {
-    let mut universe = Universe::new();
+    let mut universe = Universe::new_from_files("./fixtures/state1.json");
 
     // The counter `n` is temporary until we implement
     // a cleaner way to stop the loop

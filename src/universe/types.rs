@@ -2,6 +2,7 @@ use num::complex::Complex;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
+use super::files;
 
 #[derive(Serialize, Deserialize, Hash, Eq, PartialEq, Debug)]
 pub struct Coordinates {
@@ -51,6 +52,16 @@ impl Universe {
     pub fn new() -> Self {
         Self {
             state: State::new(),
+            is_even_step: true,
+            rules: [[Complex::new(0.0, 0.0); 16]; 16],
+        }
+    }
+
+    pub fn new_from_files(state_file: &str) -> Self {
+        let state = files::get_state_from_file(state_file);
+
+        Self {
+            state,
             is_even_step: true,
             rules: [[Complex::new(0.0, 0.0); 16]; 16],
         }
