@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Hash, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Debug)]
 pub struct Coordinates {
     pub x: i32,
     pub y: i32,
@@ -24,7 +24,7 @@ pub struct ComplexDef<T> {
 // We decided to do that to optimize memory but it needs to be reviewed later
 // use a struct would be better for readability
 #[serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Configuration {
     #[serde(with = "ComplexDef")]
     pub amplitude: Complex<f64>,
