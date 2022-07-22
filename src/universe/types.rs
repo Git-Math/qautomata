@@ -75,7 +75,7 @@ impl Universe {
 pub fn get_test_rules() -> Rules {
     let c = |x: f64, y: f64| -> Complex<f64> { Complex::new(x, y) };
 
-    let rules = [
+    [
         [
             c(0., 0.),
             c(0., 0.),
@@ -364,7 +364,5 @@ pub fn get_test_rules() -> Rules {
             c(0., 0.),
             c(0., 0.),
         ],
-    ];
-
-    rules
+    ]
 }

@@ -85,11 +85,12 @@ impl Configuration {
 pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
     let mut ret: Vec<(Complex<f64>, [bool; 4])> = Vec::new();
     let index = square_state_to_index(square_state);
+    let len = rules[0].len();
 
-    for row in 0..rules[0].len() {
-        let amplitude = rules[row][index as usize];
+    for (ri, row) in rules.iter().enumerate().take(len) {
+        let amplitude = row[index as usize];
         if amplitude.norm() != 0.0 {
-            let new_square_state = index_to_square_state(row as i32);
+            let new_square_state = index_to_square_state(ri as i32);
             ret.push((amplitude, new_square_state));
         }
     }
@@ -133,14 +134,12 @@ fn square_state_to_index(square_state: [bool; 4]) -> i32 {
 }
 
 fn index_to_square_state(index: i32) -> [bool; 4] {
-    let square_state = [
+    [
         ((index >> 3) & 1) == 1,
         ((index >> 2) & 1) == 1,
         ((index >> 1) & 1) == 1,
         (index & 1) == 1,
-    ];
-
-    square_state
+    ]
 }
 
 #[cfg(test)]
