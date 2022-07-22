@@ -82,9 +82,18 @@ impl Configuration {
     }
 }
 
-pub fn compute_rules(_rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
-    let ret = vec![(Complex::new(0., 0.), [true, true, true, false])];
-    let _index = square_state_to_index(square_state);
+pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
+    let mut ret: Vec<(Complex<f64>, [bool; 4])> = Vec::new();
+    let index = square_state_to_index(square_state);
+
+    for row in 0..rules[0].len() {
+        let amplitude = rules[row][index as usize];
+        if amplitude.norm() != 0.0 {
+            let new_square_state = index_to_square_state(row as i32);
+            ret.push((amplitude, new_square_state));
+        }
+    }
+
     ret
 }
 
@@ -123,16 +132,49 @@ fn square_state_to_index(square_state: [bool; 4]) -> i32 {
     s[0] | s[1] | s[2] | s[3]
 }
 
+fn index_to_square_state(index: i32) -> [bool; 4] {
+    let square_state = [
+        ((index >> 3) & 1) == 1,
+        ((index >> 2) & 1) == 1,
+        ((index >> 1) & 1) == 1,
+        (index & 1) == 1,
+    ];
+
+    square_state
+}
+
 #[cfg(test)]
 mod tests {
     use crate::universe::{step, types};
+    use num::complex::Complex;
 
     #[test]
     fn test_compute_rule() {
         let rules = types::get_test_rules();
-        let ret = step::compute_rules(rules, [true, true, false, false]);
-        //TODO
-        println!("{:#?}", ret);
+
+        struct Test {
+            rules: types::Rules,
+            ss: [bool; 4],
+            exp: Vec<(Complex<f64>, [bool; 4])>,
+        }
+
+        let tests = [
+            Test {
+                rules,
+                ss: [false, true, false, false],
+                exp: vec![(Complex::new(1.0, 0.0), [true, false, false, true])],
+            },
+            Test {
+                rules,
+                ss: [false, false, false, true],
+                exp: vec![(Complex::new(1.0, 0.0), [false, false, false, true])],
+            },
+        ];
+
+        for t in tests {
+            let got = step::compute_rules(t.rules, t.ss);
+            assert_eq!(got, t.exp);
+        }
     }
 
     #[test]
@@ -175,6 +217,50 @@ mod tests {
 
         for t in tests {
             let got = step::square_state_to_index(t.ss);
+            assert_eq!(got, t.exp);
+        }
+    }
+
+    #[test]
+    fn test_index_square_state() {
+        struct Test {
+            exp: [bool; 4],
+            index: i32,
+        }
+
+        let tests = [
+            Test {
+                index: 0,
+                exp: [false, false, false, false],
+            },
+            Test {
+                index: 9,
+                exp: [true, false, false, true],
+            },
+            Test {
+                index: 4,
+                exp: [false, true, false, false],
+            },
+            Test {
+                index: 5,
+                exp: [false, true, false, true],
+            },
+            Test {
+                index: 13,
+                exp: [true, true, false, true],
+            },
+            Test {
+                index: 14,
+                exp: [true, true, true, false],
+            },
+            Test {
+                index: 15,
+                exp: [true, true, true, true],
+            },
+        ];
+
+        for t in tests {
+            let got = step::index_to_square_state(t.index);
             assert_eq!(got, t.exp);
         }
     }
