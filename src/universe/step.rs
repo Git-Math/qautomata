@@ -103,7 +103,7 @@ pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>
 //To convert the array of boolean in a number that represents an index
 //in a 16x16 grid of rules.
 //That grid contains the 16x16 possible combinations of booleans
-//we can have in a [b_1, b_2, b_3, b_4] array of booleans
+//we can have in a [b_0, b_1, b_2, b_3] array of booleans
 //with b_i = (0 | 1)
 //
 // Example:
