@@ -114,7 +114,7 @@ pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>
 // 0000 << 3 = 0000
 // 0001 << 2 = 0100
 // 0000 << 1 = 0000
-// 0000 << 0 =  0000
+// 0000 << 0 = 0000
 //
 // Then we combine them using the OR bitwise operator to get an i32 number
 // number = 0000 | 0100 | 0000 | 0000;
