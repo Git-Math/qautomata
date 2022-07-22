@@ -1,3 +1,4 @@
+use num::complex::Complex;
 use std::collections::HashMap;
 
 use super::types::*;
@@ -59,15 +60,21 @@ impl Configuration {
             let input_square_state: [bool; 4] = [
                 self.living_cells
                     .contains_key(&Coordinates { x: x_min, y: y_min }),
-                self.living_cells
-                    .contains_key(&Coordinates { x: x_min, y: y_min }),
-                self.living_cells
-                    .contains_key(&Coordinates { x: x_min, y: y_min }),
-                self.living_cells
-                    .contains_key(&Coordinates { x: x_min, y: y_min }),
+                self.living_cells.contains_key(&Coordinates {
+                    x: x_min,
+                    y: y_min + 1,
+                }),
+                self.living_cells.contains_key(&Coordinates {
+                    x: x_min + 1,
+                    y: y_min,
+                }),
+                self.living_cells.contains_key(&Coordinates {
+                    x: x_min + 1,
+                    y: y_min + 1,
+                }),
             ];
 
-            compute_rule(rules, input_square_state);
+            compute_rules(rules, input_square_state);
             // To be continued when compute_rule() is implemented then tested
         }
 
@@ -75,4 +82,100 @@ impl Configuration {
     }
 }
 
-fn compute_rule(_rules: Rules, _input_square_state: [bool; 4]) {}
+pub fn compute_rules(_rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
+    let ret = vec![(Complex::new(0., 0.), [true, true, true, false])];
+    let _index = square_state_to_index(square_state);
+    ret
+}
+
+//square_state_to_index converts a square_state in index in the 16x16 gird of rules
+//
+//To convert the array of boolean in a number that represents an index
+//in a 16x16 grid of rules.
+//That grid contains the 16x16 possible combinations of booleans
+//we can have in a [b_1, b_2, b_3, b_4] array of booleans
+//with b_i = (0 | 1)
+//
+// Example:
+// Given an array [false, true, false, false]
+// wich in binary is [0000, 0001, 0000, 0000]
+//
+// We first shift these binary bits, to position them approriately in an i32 sized number
+// 0000 << 0 = 0000
+// 0001 << 1 = 0100
+// 0000 << 2 = 0000
+// 0000 << 3 =  0000
+//
+// Then we combine them using the OR bitwise operator to get an i32 number
+// number = 0000 | 0100 | 0000 | 0000;
+//
+//The resulted number is number = 4 = 0100
+fn square_state_to_index(square_state: [bool; 4]) -> i32 {
+    let ss = square_state;
+    let s = [
+        (ss[0] as i32) << 3,
+        (ss[1] as i32) << 2,
+        (ss[2] as i32) << 1,
+        ss[3] as i32,
+    ];
+
+    // return the index
+    s[0] | s[1] | s[2] | s[3]
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::universe::{step, types};
+
+    #[test]
+    fn test_compute_rule() {
+        let rules = types::get_test_rules();
+        let ret = step::compute_rules(rules, [true, true, false, false]);
+        //TODO
+        println!("{:#?}", ret);
+    }
+
+    #[test]
+    fn test_square_state_to_index() {
+        struct Test {
+            ss: [bool; 4],
+            exp: i32,
+        }
+
+        let tests = [
+            Test {
+                ss: [false, false, false, false],
+                exp: 0,
+            },
+            Test {
+                ss: [true, false, false, true],
+                exp: 9,
+            },
+            Test {
+                ss: [false, true, false, false],
+                exp: 4,
+            },
+            Test {
+                ss: [false, true, false, true],
+                exp: 5,
+            },
+            Test {
+                ss: [true, true, false, true],
+                exp: 13,
+            },
+            Test {
+                ss: [true, true, true, false],
+                exp: 14,
+            },
+            Test {
+                ss: [true, true, true, true],
+                exp: 15,
+            },
+        ];
+
+        for t in tests {
+            let got = step::square_state_to_index(t.ss);
+            assert_eq!(got, t.exp);
+        }
+    }
+}
