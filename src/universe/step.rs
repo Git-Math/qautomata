@@ -121,12 +121,11 @@ pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>
 //
 //The resulted number is number = 4 = 0100
 fn square_state_to_index(square_state: [bool; 4]) -> i32 {
-    let ss = square_state;
     let s = [
-        (ss[0] as i32) << 3,
-        (ss[1] as i32) << 2,
-        (ss[2] as i32) << 1,
-        ss[3] as i32,
+        (square_state[0] as i32) << 3,
+        (square_state[1] as i32) << 2,
+        (square_state[2] as i32) << 1,
+        square_state[3] as i32,
     ];
 
     // return the index
