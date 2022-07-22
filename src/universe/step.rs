@@ -111,10 +111,10 @@ pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>
 // wich in binary is [0000, 0001, 0000, 0000]
 //
 // We first shift these binary bits, to position them approriately in an i32 sized number
-// 0000 << 0 = 0000
-// 0001 << 1 = 0100
-// 0000 << 2 = 0000
-// 0000 << 3 =  0000
+// 0000 << 3 = 0000
+// 0001 << 2 = 0100
+// 0000 << 1 = 0000
+// 0000 << 0 =  0000
 //
 // Then we combine them using the OR bitwise operator to get an i32 number
 // number = 0000 | 0100 | 0000 | 0000;
