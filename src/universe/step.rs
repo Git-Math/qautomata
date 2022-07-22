@@ -84,11 +84,11 @@ impl Configuration {
 
 pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
     let mut ret: Vec<(Complex<f64>, [bool; 4])> = Vec::new();
-    let index = square_state_to_index(square_state);
+    let index = square_state_to_index(square_state) as usize;
     let len = rules[0].len();
 
     for (ri, row) in rules.iter().enumerate().take(len) {
-        let amplitude = row[index as usize];
+        let amplitude = row[index];
         if amplitude.norm() != 0.0 {
             let new_square_state = index_to_square_state(ri as i32);
             ret.push((amplitude, new_square_state));
