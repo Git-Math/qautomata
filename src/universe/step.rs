@@ -78,10 +78,10 @@ impl Configuration {
             // Get the 4 living cells of the square [0] [1]
             //                                      [2] [3]
             //
-            // Update the values of the living cells of the square to true
-            //     - in living_cells to mark them as computed during this step
-            //       in order to not compute them again in the loop
-            //     - in square_state (see comment above)
+            // - Mark the living cells as computed during this step
+            //    in order to not compute them again in the loop
+            // - Mark the cells alive in the `square_state` array
+            //    if we find them in the list of living cells (see comment above)
             {
                 let living_cell_0 = self
                     .living_cells
