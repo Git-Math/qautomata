@@ -300,12 +300,12 @@ mod tests {
             Test {
                 rules,
                 ss: [false, true, false, false],
-                exp: vec![(Complex::new(1.0, 0.0), [true, false, false, true])],
+                exp: vec![(Complex::new(1.0, 0.0), [false, false, false, true])],
             },
             Test {
                 rules,
                 ss: [false, false, false, true],
-                exp: vec![(Complex::new(1.0, 0.0), [false, false, false, true])],
+                exp: vec![(Complex::new(1.0, 0.0), [false, false, true, false])],
             },
         ];
 
