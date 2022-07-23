@@ -64,7 +64,7 @@ impl Configuration {
             }
 
             // The square_state contains 4 bool, one for each cell of the square
-            // The boolean is true if the cell is alive and false overwise
+            // The boolean is true if the cell is alive and false otherwise
             // Cell order in the configuration compared to the square_state array:
             // [0] [1] -> configuration
             // [2] [3]
