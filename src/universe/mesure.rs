@@ -11,6 +11,10 @@ impl Universe {
     // according to a probability distribution
     // computed from the amplitudes of the configurations
     pub fn measure(&mut self) {
+        if self.state.len() <= 1 {
+            return;
+        }
+
         let mut state_weights: Vec<f64> = Vec::new();
 
         for configuration in self.state.iter() {
@@ -31,7 +35,5 @@ impl Universe {
 mod tests {
 
     #[test]
-    fn test_measure() {
-
-    }
+    fn test_measure() {}
 }
