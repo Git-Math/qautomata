@@ -42,7 +42,7 @@ pub type Rules = [[Complex<f64>; 16]; 16];
 // The is_even_step attribute is used to determine the square in which
 // the rules of the universe apply for a given living cell
 // It is true if the universe is in an even step and false othrerwise
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Universe {
     pub state: State,
     pub is_even_step: bool,
