@@ -45,6 +45,7 @@ pub type Rules = [[Complex<f64>; 16]; 16];
 #[derive(Clone, Debug)]
 pub struct Universe {
     pub state: State,
+    pub combined_state: HashMap<Coordinates, f64>,
     pub is_even_step: bool,
     pub rules: Rules,
 }
@@ -53,6 +54,7 @@ impl Universe {
     pub fn new() -> Self {
         Self {
             state: State::new(),
+            combined_state: HashMap::new(),
             is_even_step: true,
             rules: [[Complex::new(0.0, 0.0); 16]; 16],
         }
@@ -63,6 +65,7 @@ impl Universe {
         let rules = get_test_rules();
         Self {
             state,
+            combined_state: HashMap::new(),
             rules,
             is_even_step: true,
         }
