@@ -26,9 +26,9 @@ pub fn generate(_cmd: &GenCmd) {
     };
 
     //Generate a set of living cells
-    let max_x = 100;
-    let max_y = 100;
-    let max_number_of_living_cells = 100;
+    let max_x = 20;
+    let max_y = 20;
+    let max_number_of_living_cells = 20;
     let mut rng = rand::thread_rng();
     //Get the number of cells we would like to have on the map
     let number_of_cells: i32 = rng.gen_range(0..max_number_of_living_cells);
