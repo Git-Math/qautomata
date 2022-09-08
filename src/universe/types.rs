@@ -5,7 +5,7 @@ use serde_with::serde_as;
 use std::collections::HashMap;
 use std::f64::consts::PI;
 
-#[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub struct Coordinates {
     pub x: i32,
     pub y: i32,

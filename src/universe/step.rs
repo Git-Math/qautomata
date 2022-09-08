@@ -19,6 +19,8 @@ impl Universe {
         self.state = new_state;
         self.combined_state = new_combined_state;
         self.is_even_step = !self.is_even_step;
+
+        self.solve_interference();
     }
 }
 
