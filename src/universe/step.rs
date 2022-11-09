@@ -5,6 +5,7 @@ use super::types::*;
 
 impl Universe {
     pub fn step(&mut self) {
+        let old_state_len = self.state.len();
         let mut new_state: State = State::new();
         let mut new_combined_state: HashMap<Coordinates, f64> = HashMap::new();
 
@@ -20,7 +21,10 @@ impl Universe {
         self.combined_state = new_combined_state;
         self.is_even_step = !self.is_even_step;
 
-        self.solve_interference();
+        // Interferences can happen only if new superpositions are created during the step
+        if self.state.len() > old_state_len {
+            self.solve_interference();
+        }
     }
 }
 
