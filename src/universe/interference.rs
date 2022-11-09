@@ -1,14 +1,13 @@
 use num::Zero;
-use std::collections::hash_map::DefaultHasher;
+use sha2::{Digest, Sha256};
 use std::collections::hash_map::Entry::{Occupied, Vacant};
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
 
 use super::types::*;
 
 impl Universe {
     pub fn solve_interference(&mut self) {
-        let mut configurations_hash: HashMap<u64, usize> = HashMap::new();
+        let mut configurations_hash: HashMap<String, usize> = HashMap::new();
 
         for i in 0..self.state.len() {
             let mut sorted_living_cells = self.state[i]
@@ -18,11 +17,15 @@ impl Universe {
                 .collect::<Vec<Coordinates>>();
             sorted_living_cells.sort_unstable();
 
-            let mut hasher = DefaultHasher::new();
-            sorted_living_cells.hash(&mut hasher);
-            let configuration_hash = hasher.finish();
+            let mut hasher = Sha256::new();
+            for coordinates in sorted_living_cells {
+                hasher.update(coordinates.x.to_be_bytes());
+                hasher.update(coordinates.y.to_be_bytes());
+            }
+            let configuration_hash = hasher.finalize();
+            let hex_configuration_hash = base16ct::lower::encode_string(&configuration_hash);
 
-            match configurations_hash.entry(configuration_hash) {
+            match configurations_hash.entry(hex_configuration_hash) {
                 Vacant(entry) => {
                     entry.insert(i);
                 }
