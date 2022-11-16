@@ -17,11 +17,17 @@ impl Universe {
                 .collect::<Vec<Coordinates>>();
             sorted_living_cells.sort_unstable();
 
+            // Create a string with the sorted_living_cells coordinates
+            // Need to check optimization against map or manually iterating
+            let sorted_living_cells_string: String =
+                sorted_living_cells
+                    .iter()
+                    .fold(String::from(""), |acc, coordinates| {
+                        acc + &coordinates.x.to_string() + ";" + &coordinates.y.to_string() + ";"
+                    });
+
             let mut hasher = Sha256::new();
-            for coordinates in sorted_living_cells {
-                hasher.update(coordinates.x.to_be_bytes());
-                hasher.update(coordinates.y.to_be_bytes());
-            }
+            hasher.update(sorted_living_cells_string);
             let configuration_hash = hasher.finalize();
             let hex_configuration_hash = base16ct::lower::encode_string(&configuration_hash);
 
