@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
 use std::f64::consts::PI;
+use std::io::Error;
 
 #[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub struct Coordinates {
@@ -60,15 +61,15 @@ impl Universe {
         }
     }
 
-    pub fn new_from_files(state_file: &str) -> Self {
-        let state = files::get_state_from_file(state_file);
+    pub fn new_from_files(state_file: &str) -> Result<Self, Error> {
+        let state = files::get_state_from_file(state_file)?;
         let rules = get_test_rules();
-        Self {
+        Ok(Self {
             state,
             combined_state: HashMap::new(),
-            rules,
             is_even_step: true,
-        }
+            rules,
+        })
     }
 }
 
