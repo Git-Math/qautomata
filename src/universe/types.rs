@@ -53,11 +53,18 @@ pub struct Universe {
 
 impl Universe {
     pub fn new() -> Self {
+        // Unique configuration with no living cell
+        let configuration = Configuration {
+            amplitude: Complex::new(1., 0.),
+            living_cells: HashMap::new(),
+        };
+        let state = vec![configuration];
+        let rules = get_test_rules();
         Self {
-            state: State::new(),
+            state,
             combined_state: HashMap::new(),
             is_even_step: true,
-            rules: [[Complex::new(0.0, 0.0); 16]; 16],
+            rules,
         }
     }
 
