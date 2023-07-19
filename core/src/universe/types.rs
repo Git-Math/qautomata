@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
 use std::f64::consts::PI;
-use std::io::Error;
 
 #[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub struct Coordinates {
@@ -37,6 +36,38 @@ pub struct Configuration {
 
 pub type State = Vec<Configuration>;
 
+// New rules
+#[derive(Serialize, Deserialize, Debug)]
+pub struct YamlRulesComplex {
+    pub re: String,
+    pub im: String,
+}
+
+pub type YamlRules = HashMap<i32, HashMap<i32, YamlRulesComplex>>;
+pub type NRules = HashMap<i32, HashMap<i32, Complex<f64>>>;
+
+pub fn yaml_rules_to_universe_rules(
+    yaml_rules: YamlRules,
+) -> Result<NRules, evalexpr::EvalexprError> {
+    let mut rules: NRules = NRules::new();
+
+    for (key, value) in yaml_rules {
+        let mut rule = HashMap::new();
+
+        for (k, v) in value {
+            let context = evalexpr::math_consts_context!()?;
+            let re: f64 = evalexpr::eval_number_with_context(&v.re, &context)?;
+            let im: f64 = evalexpr::eval_number_with_context(&v.im, &context)?;
+
+            rule.insert(k, Complex::new(re, im));
+        }
+
+        rules.insert(key, rule);
+    }
+
+    Ok(rules)
+}
+
 // The Rules defines a 16x16 grid of complex number
 pub type Rules = [[Complex<f64>; 16]; 16];
 
@@ -52,34 +83,28 @@ pub struct Universe {
     pub step_count: usize,
 }
 
-impl Default for Universe {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl Universe {
-    pub fn new() -> Self {
+    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
         // Unique configuration with no living cell
         let configuration = Configuration {
             amplitude: Complex::new(1., 0.),
             living_cells: HashMap::new(),
         };
         let state = vec![configuration];
-        let rules = get_test_rules();
+        let rules = get_default_rules()?;
         let step_count = 0;
-        Self {
+        Ok(Self {
             state,
             combined_state: HashMap::new(),
             is_even_step: true,
             rules,
             step_count,
-        }
+        })
     }
 
-    pub fn new_from_files(state_file: &str) -> Result<Self, Error> {
+    pub fn new_from_files(state_file: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let state = files::get_state_from_file(state_file)?;
-        let rules = get_test_rules();
+        let rules = get_default_rules()?;
         let step_count = 0;
         let mut universe = Self {
             state,
@@ -92,9 +117,9 @@ impl Universe {
         Ok(universe)
     }
 
-    pub fn new_from_str(content: &str) -> Result<Self, Error> {
+    pub fn new_from_str(content: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let state: State = serde_json::from_str(content)?;
-        let rules = get_test_rules();
+        let rules = get_default_rules()?;
         let step_count = 0;
         let mut universe = Self {
             state,
@@ -108,14 +133,15 @@ impl Universe {
     }
 }
 
-// get_test_rules return an array of rules
-// at term the rules should normally be extrated from a file
-// but for now these rules are written in the code
-// and used for testing purposes
-pub fn get_test_rules() -> Rules {
+pub fn get_default_rules() -> Result<Rules, Box<dyn std::error::Error>> {
+    let yaml_rules = files::get_rules_from_file("./core/fixtures/rules/default_rules.yaml")?;
+    println!("{:#?}", yaml_rules);
+    let rules = yaml_rules_to_universe_rules(yaml_rules);
+    println!("{:#?}", rules);
+
     let c = |x: f64, y: f64| -> Complex<f64> { Complex::new(x, y) };
 
-    [
+    Ok([
         [
             c(1., 0.),
             c(0., 0.),
@@ -404,5 +430,5 @@ pub fn get_test_rules() -> Rules {
             c(0., 0.),
             c(0., PI / 2.0).exp(),
         ],
-    ]
+    ])
 }
