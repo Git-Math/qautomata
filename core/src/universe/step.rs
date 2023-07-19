@@ -12,7 +12,7 @@ impl Universe {
 
         for configuration in self.state.iter_mut() {
             new_state.append(&mut configuration.step(
-                self.rules,
+                &self.rules,
                 self.is_even_step,
                 &mut new_combined_state,
             ));
@@ -32,7 +32,7 @@ impl Universe {
 impl Configuration {
     pub fn step(
         &mut self,
-        rules: Rules,
+        rules: &Rules,
         is_even_step: bool,
         new_combined_state: &mut HashMap<Coordinates, f64>,
     ) -> Vec<Configuration> {
@@ -290,16 +290,14 @@ impl Configuration {
     }
 }
 
-pub fn compute_rules(rules: Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
+pub fn compute_rules(rules: &Rules, square_state: [bool; 4]) -> Vec<(Complex<f64>, [bool; 4])> {
     let mut ret: Vec<(Complex<f64>, [bool; 4])> = Vec::new();
-    let index = square_state_to_index(square_state) as usize;
-    let len = rules[0].len();
+    let start_index = square_state_to_index(square_state);
 
-    for (ri, row) in rules.iter().enumerate().take(len) {
-        let amplitude = row[index];
+    for (index, amplitude) in rules.get(&start_index).unwrap() {
         if amplitude.norm() != 0.0 {
-            let new_square_state = index_to_square_state(ri as i32);
-            ret.push((amplitude, new_square_state));
+            let new_square_state = index_to_square_state(*index);
+            ret.push((*amplitude, new_square_state));
         }
     }
 

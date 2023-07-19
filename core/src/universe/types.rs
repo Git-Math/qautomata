@@ -3,7 +3,6 @@ use num::complex::Complex;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
-use std::f64::consts::PI;
 
 #[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub struct Coordinates {
@@ -36,7 +35,6 @@ pub struct Configuration {
 
 pub type State = Vec<Configuration>;
 
-// New rules
 #[derive(Serialize, Deserialize, Debug)]
 pub struct YamlRulesComplex {
     pub re: String,
@@ -44,12 +42,12 @@ pub struct YamlRulesComplex {
 }
 
 pub type YamlRules = HashMap<i32, HashMap<i32, YamlRulesComplex>>;
-pub type NRules = HashMap<i32, HashMap<i32, Complex<f64>>>;
+pub type Rules = HashMap<i32, HashMap<i32, Complex<f64>>>;
 
 pub fn yaml_rules_to_universe_rules(
     yaml_rules: YamlRules,
-) -> Result<NRules, evalexpr::EvalexprError> {
-    let mut rules: NRules = NRules::new();
+) -> Result<Rules, evalexpr::EvalexprError> {
+    let mut rules: Rules = Rules::new();
 
     for (key, value) in yaml_rules {
         let mut rule = HashMap::new();
@@ -67,9 +65,6 @@ pub fn yaml_rules_to_universe_rules(
 
     Ok(rules)
 }
-
-// The Rules defines a 16x16 grid of complex number
-pub type Rules = [[Complex<f64>; 16]; 16];
 
 // The is_even_step attribute is used to determine the square in which
 // the rules of the universe apply for a given living cell
@@ -135,300 +130,7 @@ impl Universe {
 
 pub fn get_default_rules() -> Result<Rules, Box<dyn std::error::Error>> {
     let yaml_rules = files::get_rules_from_file("./core/fixtures/rules/default_rules.yaml")?;
-    println!("{:#?}", yaml_rules);
-    let rules = yaml_rules_to_universe_rules(yaml_rules);
-    println!("{:#?}", rules);
+    let rules = yaml_rules_to_universe_rules(yaml_rules)?;
 
-    let c = |x: f64, y: f64| -> Complex<f64> { Complex::new(x, y) };
-
-    Ok([
-        [
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., PI / 4.0).exp(),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1. / 2.0_f64.sqrt(), 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1. / 2.0_f64.sqrt(), 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1.0 / 2.0_f64.sqrt(), 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(-1.0 / 2.0_f64.sqrt(), 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., PI / 8.0).exp(),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(1., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-        ],
-        [
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., 0.),
-            c(0., PI / 2.0).exp(),
-        ],
-    ])
+    Ok(rules)
 }
