@@ -1,0 +1,70 @@
+0:
+    0:
+        re: "1"
+        im: "0"
+1:
+    2:
+        re: "1"
+        im: "0"
+2:
+    8:
+        re: "1"
+        im: "0"
+3:
+    11:
+        re: "1"
+        im: "0"
+4:
+    1:
+        re: "1"
+        im: "0"
+5:
+    7:
+        re: "1"
+        im: "0"
+6:
+    6:
+        re: "1/math::sqrt(2)"
+        im: "0"
+    9:
+        re: "1/math::sqrt(2)"
+        im: "0"
+7:
+    5:
+        re: "math::cos(PI/4)"
+        im: "math::sin(PI/4)"
+8:
+    4:
+        re: "1"
+        im: "0"
+9:
+    6:
+        re: "1/math::sqrt(2)"
+        im: "0"
+    9:
+        re: "-1/math::sqrt(2)"
+        im: "0"
+10:
+    14:
+        re: "1"
+        im: "0"
+11:
+    3:
+        re: "1"
+        im: "0"
+12:
+    13:
+        re: "1"
+        im: "0"
+13:
+    12:
+        re: "1"
+        im: "0"
+14:
+    10:
+        re: "math::cos(PI/8)"
+        im: "math::sin(PI/8)"
+15:
+    15:
+        re: "math::cos(PI/2)"
+        im: "math::sin(PI/2)"
