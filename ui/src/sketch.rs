@@ -86,7 +86,7 @@ fn update_ui(model: &mut Model) {
                             }
                             None => {
                                 model.state = State::Drawing;
-                                Universe::new()
+                                Universe::new().unwrap()
                             }
                         }
                     }
@@ -182,7 +182,7 @@ fn model(app: &App) -> Model {
     // Else we create an empty universe in which we can draw cells
     let state_file = STATE_FILE.lock().unwrap();
     let (universe, universe_file, state) = match state_file.as_str() {
-        "" => (Universe::new(), None, State::Drawing),
+        "" => (Universe::new().unwrap(), None, State::Drawing),
         sf => (
             Universe::new_from_files(sf).unwrap(),
             Some(sf.to_string()),

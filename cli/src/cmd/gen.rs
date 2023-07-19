@@ -16,7 +16,7 @@ pub struct GenCmd {
 }
 
 pub fn generate(_cmd: &GenCmd) {
-    let universe = types::Universe::new();
+    let universe = types::Universe::new().unwrap();
     let mut state = universe.state;
 
     let mut configuration = types::Configuration {
