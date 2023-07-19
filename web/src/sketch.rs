@@ -20,11 +20,11 @@ impl Model {
         //Create a universe from a file
         let universe: Universe = if is_webapp {
             Universe::new_from_str(include_str!(
-                "../../core/fixtures/state_2_diagonal_cells.json"
+                "../../core/fixtures/states/state_2_diagonal_cells.json"
             ))
             .unwrap()
         } else {
-            let state_file = "./core/fixtures/state_2_diagonal_cells.json";
+            let state_file = "./core/fixtures/states/state_2_diagonal_cells.json";
             Universe::new_from_files(state_file).unwrap()
         };
 
